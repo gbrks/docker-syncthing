@@ -2,7 +2,22 @@
 
 # Syncthing
 
-Alpine (https://www.alpinelinux.org/) based Syncthing (http://syncthing.net) container
+Lightweight Alpine based Syncthing container, with an image size of ...
+
+https://www.alpinelinux.org/
+http://syncthing.net
+
+The container will build syncthing from source. This was primarily due to the Alpine packages being built with the ```-no-upgrade``` flag, and thus will not automatically upgrade itself.
+
+On an upgrade, syncthing will exit, and the container will stop. The ```--restart``` parameter below will restart the container on these events.
+
+
+## Usage
+
+Mount any desired folders using -v <host_dir>:<docker_dir> when running the container.
+
+If running behind a NAT router, ensure port 22000 is open and forwarded to the docker host.
+If this is not possible, the docker may be started with ```--net=host``` to the docker run line, which will allow uPnP to open the ports in the router. 
 
 Run with:
 
@@ -10,17 +25,17 @@ Run with:
 docker run -d --name=syncthing \
   --restart=on-failure:20 \
   -v /opt/appdata/syncthing:/config \
-  -v /opt/appdata/syncmounts:/sync \
+  -v /<host sync folder>:/sync/<sync folder> \
   -p 8384:8384/tcp \
   -p 22000:22000/tcp \
   -p 21025:21025/udp \
   gbrks/syncthing
 ```
 
-On initial run, a default share will be established at /sync.
-This should be removed, as it will point to your sync root directory.
-Bind mount any individual paths into this directory, and set them up as shares.
+## Container User
+The container will by default run as the user with uid 1000, if this is not suitable, it can be run as the root user by including ```-u="root"``` in the docker ```run``` command.
+Ensure /opt/appdata/syncthing/ (or other mapped folder) on the host is read/writable by the syncthing user
 
-For example:
-mount --bind /path/to/sync1 /opt/appdata/syncmounts/sync1
-mount --bind /path/to/sync2 /opt/appdata/syncmounts/sync2
+## Sync folder
+On initial run, a default share will be established at /...
+This should be removed, as it will point to your sync root directory.

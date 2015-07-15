@@ -1,27 +1,37 @@
 FROM alpine:latest
 MAINTAINER Gavin Brooks <gavin@brks.io>
 
-ENV D_USER docker 
-ENV D_UID 1000
+ENV VERSION 0.11.13
 
-VOLUME /config
+# Add user to run syncthing as, must exist on host and have access to files
+RUN adduser -D -u 1000 syncthing users
 
-RUN adduser -D -u 1000 docker users \
-  && chown docker:users -R /config
-
-RUN apk add --update syncthing \
-	ca-certificates \
-  && rm -rf /var/cache/apk/*
+# Add dependencies, add build environment, download from Github and build, then clean up
+RUN apk add --update ca-certificates \
+    --virtual build_go \
+	    git godep go mercurial bash && \
+    rm -rf /var/cache/apk/* && \
+	mkdir -p /go/src/github.com/syncthing && \
+    cd /go/src/github.com/syncthing && \
+	git clone https://github.com/syncthing/syncthing.git && \
+	cd syncthing && \
+	git checkout v$VERSION && \
+	go run build.go %% \
+	mv bin/syncthing /home/syncthing/syncthing && \
+	chown syncthing:syncthing /home/syncthing/syncthing && \
+	rm -rf /go && \
+	apk del build_go
+		
 
 EXPOSE 8384 22000 21025/udp
 
-VOLUME /sync
+VOLUME /config
 
-USER docker
+USER syncthing
 
 CMD ["-no-browser", "-no-restart", "-gui-address=0.0.0.0:8384", "-home=/config"]  
 
-ENTRYPOINT ["/usr/bin/syncthing"]  
+ENTRYPOINT ["/home/syncthing/syncthing"]  
 
 
   
