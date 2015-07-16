@@ -2,7 +2,7 @@
 
 # Syncthing
 
-Lightweight Alpine based Syncthing container, with an image size of ...
+Lightweight Alpine based Syncthing container, with an image size of 18Mb.
 
 https://www.alpinelinux.org/
 http://syncthing.net
@@ -14,7 +14,7 @@ On an upgrade, syncthing will exit, and the container will stop. The ```--restar
 
 ## Usage
 
-Mount any desired folders using -v <host_dir>:<docker_dir> when running the container.
+Mount any desired folders using ```-v <host_dir>:<docker_dir>``` when running the container.
 
 If running behind a NAT router, ensure port 22000 is open and forwarded to the docker host.
 If this is not possible, the docker may be started with ```--net=host``` to the docker run line, which will allow uPnP to open the ports in the router. 
@@ -37,5 +37,5 @@ The container will by default run as the user with uid 1000, if this is not suit
 Ensure /opt/appdata/syncthing/ (or other mapped folder) on the host is read/writable by the syncthing user
 
 ## Sync folder
-On initial run, a default share will be established at /...
-This should be removed, as it will point to your sync root directory.
+On initial run, a default share will be established at /home/syncthing/Sync
+This should be removed, as it will be internal to the container. Any sync'ed folders should be located in /sync/
