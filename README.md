@@ -1,5 +1,3 @@
-# Syncthing
-
 Lightweight Alpine based Syncthing container, with an image size of 18Mb.
 
 https://www.alpinelinux.org/
