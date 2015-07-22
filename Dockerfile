@@ -2,31 +2,31 @@ FROM alpine:latest
 MAINTAINER Gavin Brooks <gavin@brks.io>
 
 ENV VERSION v0.11.16
+ENV RELEASE syncthing-linux-amd64-$VERSION
 
 # Add user to run syncthing as, must exist on host and have access to files
 RUN adduser -D -u 1000 syncthing users
 
 # Add dependencies 
-RUN apk add --update ca-certificates \
+RUN apk add --update ca-certificates && \
 
-# Add build environment 
-    --virtual build_go \
-	    git godep go mercurial bash && \
-    rm -rf /var/cache/apk/* && \
+# Add glibc
+    wget "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" && \
+	apk add --allow-untrusted glibc-2.21-r2.apk && \
 
-# Download from Github and build
-	mkdir -p /go/src/github.com/syncthing && \
-    cd /go/src/github.com/syncthing && \
-	git clone https://github.com/syncthing/syncthing.git && \
-	cd syncthing && \
-	git checkout $VERSION && \
-	go run build.go && \
-	mv bin/syncthing /home/syncthing/syncthing && \
-	chown syncthing:syncthing /home/syncthing/syncthing && \
+# Download from release from Github
+    wget -O /$RELEASE.tar.gz \
+	    https://github.com/syncthing/syncthing/releases/download/$VERSION/$RELEASE.tar.gz && \
+	tar zxf /$RELEASE.tar.gz -C /usr/local && \
+	ln -s /usr/local/$RELEASE/syncthing /usr/local/bin && \
+	
+# Modify ownership to permit syncthing updating via a userspace run binary
+    chown -R syncthing:syncthing /usr/local/$RELEASE/ && \
+	chown -R syncthing:syncthing /usr/local/bin && \
 
 # Clean up
-	rm -rf /go && \
-	apk del build_go
+    rm /$RELEASE.tar.gz && \
+    rm -rf /var/cache/apk/*
 		
 USER syncthing
 
@@ -36,7 +36,5 @@ VOLUME /config
 
 CMD ["-no-browser", "-no-restart", "-gui-address=0.0.0.0:8384", "-home=/config"]  
 
-ENTRYPOINT ["/home/syncthing/syncthing"]  
+ENTRYPOINT ["/usr/local/bin/syncthing"]  
 
-
-  
