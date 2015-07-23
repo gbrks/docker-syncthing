@@ -1,6 +1,10 @@
-Lightweight Alpine based Syncthing container, with an image size of approximately 18 MB.
+Small, lightweight Alpine based Syncthing container.
+
+Size of image:
+[![](https://badge.imagelayers.io/gbrks/syncthing:latest.svg)](https://imagelayers.io/?images=gbrks/syncthing:latest 'Get your own badge on imagelayers.io')
 
 https://www.alpinelinux.org/
+
 http://syncthing.net
 
 This image contains Syncthing built from source, as the official Alpine package tended to lag by a few releases.
@@ -34,7 +38,7 @@ The Syncthing binary is then simply pulled from a Github release, with automatic
 
 On an upgrade, Syncthing will exit, and the container will stop. The ```--restart``` parameter below will restart the container on these events.
 
-Image size will be slightly higher (approximately 28 MB) with the extra dependencies.
+Image size will be slightly higher ([![](https://badge.imagelayers.io/gbrks/syncthing:edge.svg)](https://imagelayers.io/?images=gbrks/syncthing:edge 'Get your own badge on imagelayers.io')) with the extra dependencies.
 
 Run with:
 
