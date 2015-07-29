@@ -1,7 +1,7 @@
 FROM alpine:latest
 MAINTAINER Gavin Brooks <gavin@brks.io>
 
-ENV VERSION v0.11.16
+ENV VERSION v0.11.17
 
 # Add user to run syncthing as, must exist on host and have access to files
 RUN adduser -D -u 1000 syncthing users
