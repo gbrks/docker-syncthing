@@ -6,7 +6,7 @@ http://syncthing.net
 
 This image contains Syncthing built from source, as the official Alpine package tended to lag by a few releases.
 
-This release is at *v0.11.26* which is the final *v0.11* release of Syncthing. Later versions are not backwards compatible with this release.
+This release is at **v0.11.26** which is the final **v0.11** release of Syncthing. Later versions are not backwards compatible with this release.
 This tag is maintained for use only if you cannot update to the latest version of Syncthing.
 
 ## Usage
