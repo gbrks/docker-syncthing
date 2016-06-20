@@ -1,7 +1,7 @@
 FROM alpine:latest
 MAINTAINER Gavin Brooks <gavin@brks.io>
 
-ENV VERSION v0.12.8
+ENV VERSION v0.13.7
 ENV RELEASE syncthing-linux-amd64-$VERSION
 
 # Add user to run syncthing as, must exist on host and have access to files
