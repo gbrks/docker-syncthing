@@ -8,14 +8,17 @@ ENV RELEASE syncthing-linux-amd64-$VERSION
 RUN adduser -D -u 1000 syncthing users
 
 # Add dependencies
-RUN apk add --update ca-certificates && \
+RUN apk add --update ca-certificates wget && \
 
 # Add glibc
-    wget "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" && \
-	apk add --allow-untrusted glibc-2.21-r2.apk && \
+#   wget "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" && \
+#	apk add --allow-untrusted glibc-2.21-r2.apk && \
+    wget --no-check-certificate -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub  && \
+    wget --no-check-certificate https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.23-r3/glibc-2.23-r3.apk && \
+    apk add glibc-2.23-r3.apk && \
 
 # Download from release from Github
-    wget -O /$RELEASE.tar.gz \
+    wget --no-check-certificate -O /$RELEASE.tar.gz \
 	    https://github.com/syncthing/syncthing/releases/download/$VERSION/$RELEASE.tar.gz && \
 	tar zxf /$RELEASE.tar.gz -C /usr/local && \
 	ln -s /usr/local/$RELEASE/syncthing /usr/local/bin && \
